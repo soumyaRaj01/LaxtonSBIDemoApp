@@ -1,0 +1,296 @@
+﻿<Window x:Class="LaxtonSBI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LaxtonSBI"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="45" />
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Rectangle Grid.Column="0" Fill="Blue"/>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title -->
+            <Grid Grid.Row="0">
+                <TextBlock Name="TitleTxt"
+                                   Text="MOSIP SBI Demo application" FontSize="15" 
+                                   Margin="5"/>
+            </Grid>
+            
+            <!-- Feedback Message-->
+            <Grid Grid.Row="2">
+                <TextBlock Name="FeedbackMsg"
+                           Text="Scanning for Decives..." FontSize="15" FontStyle="Italic" FontWeight="Light"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                    />
+            </Grid>
+
+            <!-- Content Plane-->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70*"/>
+                    <ColumnDefinition Width="30*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Fingerprint plane -->
+                    <Border Grid.Row="0"
+                            BorderBrush="LightBlue" BorderThickness="3"
+                            Margin="10,10,10,10"
+                            CornerRadius="4">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20*"/>
+                                <RowDefinition Height="60*"/>
+                                <RowDefinition Height="20*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Fingerprint Title -->
+                            <Grid Grid.Row="0">
+                                <TextBlock Name ="FingerprintsTitle"
+                                           VerticalAlignment="Center"
+                                           Margin="10,0,0,0"
+                                           Text="Fingerprints" FontSize="15"/>
+                            </Grid>
+
+                            <!-- Fingerprint Display -->
+                            <Grid Grid.Row="1">
+
+                            </Grid>
+
+                            <!-- Fingerprint Capture-->
+                            <Grid Grid.Row="2">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                
+                                <ComboBox Grid.Column="0" Margin="0,0,5,0" 
+                                          Name="FingerprintDropdown"  
+                                          HorizontalAlignment="Right" VerticalAlignment="Center" Width="150" >
+                                    <ComboBoxItem Content="Capture all fingers"></ComboBoxItem>
+                                    <ComboBoxItem Content="Capture left fingers"></ComboBoxItem>
+                                    <ComboBoxItem Content="Capture right fingers"></ComboBoxItem>
+                                </ComboBox>
+
+                                <Button Grid.Column="1" Name="FingerprintCaptureBtn" Content="Capture"
+                                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        Width="80" 
+                                        Margin="5,0,0,0"
+                                        Background="Blue" Foreground="White"
+                                        FontWeight="Medium"
+                                        Click="FingerprintCaptureBtn_Click">
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="3"/>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
+
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Face Plane -->
+                        <Border Grid.Column="0"
+                                BorderBrush="LightBlue" BorderThickness="3"
+                                Margin="10,10,10,10"
+                                CornerRadius="4">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20*"/>
+                                    <RowDefinition Height="60*"/>
+                                    <RowDefinition Height="20*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Face Title -->
+                                <Grid Grid.Row="0">
+                                    <TextBlock Name="FaceTitle"
+                                               VerticalAlignment="Center"
+                                               Margin="10,0,0,0"
+                                               Text="Face" FontSize="15"/>
+
+                                    <!--
+                                    <CheckBox x:Name="LEDcheck" 
+                                              HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              Margin="0,0,10,0"
+                                              Content="Use LED during capture" IsThreeState="True"                                                Checked="HandleCheck" Unchecked="HandleUnchecked" 
+                                              Indeterminate="HandleThirdState" /> 
+                                    -->
+                                </Grid>
+
+                                <!-- Face Content -->
+                                <Grid Grid.Row="1">
+                                    
+                                </Grid>
+
+
+                                <!-- Face Capture -->
+                                <Grid Grid.Row="2">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <ComboBox Grid.Column="0" Margin="0,0,5,0" 
+                                          Name="FaceDropdown"  
+                                          HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" >
+                                        <ComboBoxItem Content="Capture face"></ComboBoxItem>
+                                    </ComboBox>
+
+                                    <Button Grid.Column="1" Name="FaceCaptureBtn" Content="Capture"
+                                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                                            Width="80"
+                                            Margin="5,0,0,0"
+                                            Background="Blue" Foreground="White"
+                                            FontWeight="Medium"
+                                            Click="FaceCaptureBtn_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="3"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+
+
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- Iris Plane -->
+                        <Border Grid.Column="1"
+                                BorderBrush="LightBlue" BorderThickness="3"
+                                Margin="10,10,10,10"
+                                CornerRadius="4">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20*"/>
+                                    <RowDefinition Height="60*"/>
+                                    <RowDefinition Height="20*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Iris Title -->
+                                <Grid Grid.Row="0">
+                                    <TextBlock Name="IrisTitle"
+                                               VerticalAlignment="Center"
+                                               Margin="10,0,0,0"
+                                               Text="Iris" FontSize="15"/>
+                                </Grid>
+
+                                <!-- Iris Content -->
+                                <Grid Grid.Row="1">
+
+                                </Grid>
+
+
+                                <!-- Face Capture -->
+                                <Grid Grid.Row="2">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+
+                                    <ComboBox Grid.Column="0" Margin="0,0,5,0" 
+                                          Name="IrisDropdown"  
+                                          HorizontalAlignment="Right" VerticalAlignment="Center" Width="100" >
+                                        <ComboBoxItem Content="Capture all irises"></ComboBoxItem>
+                                        <ComboBoxItem Content="Capture left iris"></ComboBoxItem>
+                                        <ComboBoxItem Content="Capture right iris"></ComboBoxItem>
+                                    </ComboBox>
+
+                                    <Button Grid.Column="1" Name="IrisCaptureBtn" Content="Capture"
+                                            FontWeight="Medium"
+                                            HorizontalAlignment="Left" VerticalAlignment="Center"
+                                            Width="80"
+                                            Margin="5,0,0,0"
+                                            Background="Blue" Foreground="White">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="3"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+
+
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                       
+                        
+                    </Grid>
+
+                </Grid>
+
+                <Grid Grid.Column="1">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10*"/>
+                        <RowDefinition Height="45*"/>
+                        <RowDefinition Height="45*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <TextBlock Name ="CaptureTitle" 
+                               HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                               Margin="0,0,0,0"
+                               Text="Capture Stream" FontSize="15"/>    
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        
+                    </Grid>
+
+                    <Button Grid.Row="2" Name="LastCaptureBtn" Content="Retry Last Capture"
+                                        HorizontalAlignment="Center" VerticalAlignment="Top"
+                                        Height="20" Width="130"
+                                        Margin="0,10,0,0"
+                                        Background="Blue" Foreground="White"
+                                        FontWeight="Medium" >
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    
+                </Grid>
+                
+            </Grid>
+            
+        </Grid>
+        
+        
+
+    </Grid>
+</Window>
