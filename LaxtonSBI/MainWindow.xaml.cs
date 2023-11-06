@@ -32,8 +32,6 @@ namespace LaxtonSBI
             // Device Info API call
             List<DeviceInfoDTO> infoResponse = await deviceInfoAPI();
 
-
-
             // Update DeviceInfoMap
             var jwtHelper = new JwtHelper();
             foreach (DeviceInfoDTO info in infoResponse)

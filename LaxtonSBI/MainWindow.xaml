@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LaxtonSBI"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    
+
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -15,6 +15,12 @@
         </Grid.ColumnDefinitions>
 
         <Rectangle Grid.Column="0" Fill="Blue"/>
+        <Button Grid.Column="0" 
+                Name="SaveBtn"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Margin="5">
+            <Image Source="Media\save_button.png"></Image>
+        </Button>
 
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
@@ -29,7 +35,7 @@
                                    Text="MOSIP SBI Demo application" FontSize="15" 
                                    Margin="5"/>
             </Grid>
-            
+
             <!-- Feedback Message-->
             <Grid Grid.Row="2">
                 <TextBlock Name="FeedbackMsg"
@@ -73,6 +79,93 @@
 
                             <!-- Fingerprint Display -->
                             <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Left Fingers -->
+                                <Grid Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20*"/>
+                                        <RowDefinition Height="80*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Left Title -->
+                                    <Grid Grid.Row="0">
+                                        <TextBlock Name ="LeftFingerTitle"
+                                           VerticalAlignment="Top" HorizontalAlignment="Center"
+                                           Text="Left Hand" FontSize="15"/>
+                                    </Grid>
+
+                                    <!-- Left Fingers Display -->
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50*"/>
+                                            <ColumnDefinition Width="50*"/>
+                                            <ColumnDefinition Width="23*"/>
+                                            <ColumnDefinition Width="28*"/>
+                                            <ColumnDefinition Width="49*"/>
+                                            <ColumnDefinition Width="50*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" Margin="22,0">
+                                            <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="3"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                CornerRadius="4">
+                                                <MediaElement Name="Left_1"/>
+                                            </Border>
+
+
+
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                </Grid>
+
+
+                                <!-- Right Fingers -->
+                                <Grid Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20*"/>
+                                        <RowDefinition Height="80*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Right Title -->
+                                    <Grid Grid.Row="0">
+                                        <TextBlock Name ="RightFingerTitle"
+                                           VerticalAlignment="Top" HorizontalAlignment="Center"
+                                           Text="Right Hand" FontSize="15"/>
+                                    </Grid>
+
+                                    <!-- Right Fingers Display -->
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50*"/>
+                                            <ColumnDefinition Width="50*"/>
+                                            <ColumnDefinition Width="23*"/>
+                                            <ColumnDefinition Width="28*"/>
+                                            <ColumnDefinition Width="49*"/>
+                                            <ColumnDefinition Width="50*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" Margin="22,0">
+                                            <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="3"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                CornerRadius="4">
+                                                <MediaElement Name="Right_1"/>
+                                            </Border>
+
+
+
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                </Grid>
 
                             </Grid>
 
@@ -84,7 +177,7 @@
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
 
-                                
+
                                 <ComboBox Grid.Column="0" Margin="0,0,5,0" 
                                           Name="FingerprintDropdown"  
                                           HorizontalAlignment="Right" VerticalAlignment="Center" Width="150" >
@@ -146,9 +239,12 @@
                                 </Grid>
 
                                 <!-- Face Content -->
-                                <Grid Grid.Row="1">
-                                    
-                                </Grid>
+                                <Border Grid.Row="1"
+                                        BorderBrush="LightBlue" BorderThickness="3"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        CornerRadius="4">
+                                    <MediaElement Name="FaceContent"/>
+                                </Border>
 
 
                                 <!-- Face Capture -->
@@ -207,6 +303,31 @@
 
                                 <!-- Iris Content -->
                                 <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid Grid.Column="0">
+                                        <Border
+                                            BorderBrush="LightBlue" BorderThickness="3"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            CornerRadius="4">
+
+                                            <MediaElement Name="LeftIrisContent"/>
+                                        </Border>
+                                    </Grid>
+
+                                    <Grid Grid.Column="1">
+                                        <Border
+                                            BorderBrush="LightBlue" BorderThickness="3"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+
+                                            CornerRadius="4">
+
+                                            <MediaElement Name="RightIrisContent"/>
+                                        </Border>
+                                    </Grid>
 
                                 </Grid>
 
@@ -247,8 +368,8 @@
                             </Grid>
                         </Border>
 
-                       
-                        
+
+
                     </Grid>
 
                 </Grid>
@@ -265,12 +386,16 @@
                         <TextBlock Name ="CaptureTitle" 
                                HorizontalAlignment="Center" VerticalAlignment="Bottom"
                                Margin="0,0,0,0"
-                               Text="Capture Stream" FontSize="15"/>    
+                               Text="Capture Stream" FontSize="15"/>
                     </Grid>
 
-                    <Grid Grid.Row="1">
-                        
-                    </Grid>
+                    <Border Grid.Row="1"
+                                    BorderBrush="LightBlue" BorderThickness="3"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    CornerRadius="4">
+                        <MediaElement Name="StreamContent"/>
+                    </Border>
+
 
                     <Button Grid.Row="2" Name="LastCaptureBtn" Content="Retry Last Capture"
                                         HorizontalAlignment="Center" VerticalAlignment="Top"
@@ -284,14 +409,14 @@
                             </Style>
                         </Button.Resources>
                     </Button>
-                    
+
                 </Grid>
-                
+
             </Grid>
-            
+
         </Grid>
-        
-        
+
+
 
     </Grid>
 </Window>
