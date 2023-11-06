@@ -28,10 +28,8 @@ namespace LaxtonSBI.API
         {
             try
             {
-                // Serialize the StreamRequestDTO object to JSON
                 string jsonRequest = JsonConvert.SerializeObject(streamRequest);
 
-                // Send a POST request to the stream endpoint
                 HttpResponseMessage response = await client.PostAsync("/stream", new StringContent(jsonRequest, Encoding.UTF8, "application/json"));
 
                 if (response.IsSuccessStatusCode)

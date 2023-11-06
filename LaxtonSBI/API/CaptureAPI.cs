@@ -4,6 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using LaxtonSBI.DTO;
+using Newtonsoft.Json;
+using LaxtonSBI.Helper;
 
 namespace LaxtonSBI.API
 {
@@ -11,20 +14,23 @@ namespace LaxtonSBI.API
     {
         private readonly HttpClient client;
         private HttpContent content;
+        private string URI;
 
         public CaptureAPI()
         {
             client = new HttpClient();
-
-            string jsonBody = "{}";
-            content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+            URI = SBIConstants.BASE_URI + SBIConstants.CAPTURE;
         }
 
-        public async Task<string> SendCustomRequestAsync()
+        public async Task<string> SendCustomRequestAsync(CaptureRequestDTO captureRequest)
         {
-            using (HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("CAPTURE"), "http://localhost:4503/capture"))
+            string jsonRequest = JsonConvert.SerializeObject(captureRequest);
+            content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            using (HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(SBIConstants.MOSIP_METHOD_CAPTURE), URI))
             {
                 request.Content = content;
+
                 HttpResponseMessage response = await client.SendAsync(request);
 
                 if (response.IsSuccessStatusCode)

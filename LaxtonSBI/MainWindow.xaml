@@ -33,7 +33,7 @@
             <!-- Feedback Message-->
             <Grid Grid.Row="2">
                 <TextBlock Name="FeedbackMsg"
-                           Text="Scanning for Decives..." FontSize="15" FontStyle="Italic" FontWeight="Light"
+                           Text="Scanning for Devices..." FontSize="15" FontStyle="Italic" FontWeight="Light"
                            HorizontalAlignment="Center" VerticalAlignment="Center"
                     />
             </Grid>
@@ -233,7 +233,8 @@
                                             HorizontalAlignment="Left" VerticalAlignment="Center"
                                             Width="80"
                                             Margin="5,0,0,0"
-                                            Background="Blue" Foreground="White">
+                                            Background="Blue" Foreground="White"
+                                            Click="IrisCaptureBtn_Click">
                                         <Button.Resources>
                                             <Style TargetType="Border">
                                                 <Setter Property="CornerRadius" Value="3"/>

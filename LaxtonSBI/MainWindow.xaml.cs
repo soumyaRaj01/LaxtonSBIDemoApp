@@ -1,24 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using LaxtonSBI.API;
 using LaxtonSBI.DTO;
-using Newtonsoft.Json;
 using LaxtonSBI.Helper;
-using Microsoft.IdentityModel.Tokens;
-using System.IO;
+using Newtonsoft.Json;
 
 namespace LaxtonSBI
 {
@@ -33,31 +23,28 @@ namespace LaxtonSBI
 
             getDeviceInfo();
             InitializeComponent();
-            
+
         }
 
         public async void getDeviceInfo()
         {
 
             // Device Info API call
-            List<DeviceInfoDTO> infoResponse = await deviceInfo();
+            List<DeviceInfoDTO> infoResponse = await deviceInfoAPI();
 
 
 
-            // Update DeviceInfoMap'
+            // Update DeviceInfoMap
             var jwtHelper = new JwtHelper();
             foreach (DeviceInfoDTO info in infoResponse)
             {
-
-                //byte[] digitalIdBytes = Base64UrlEncoder.DecodeBytes(info.digitalId);
-                //string digitalIdJson = Encoding.UTF8.GetString(digitalIdBytes);
-
                 var digitalId = JsonConvert.DeserializeObject<DigitalIdDTO>(jwtHelper.Decode(info.digitalId, false));
 
                 string key = digitalId.type + "_" + digitalId.deviceSubType;
 
                 availableDeviceMap.Add(key, info);
 
+                Console.WriteLine(key);
                 //Console.WriteLine(key);
                 //Console.WriteLine("Device Info:");
                 //Console.WriteLine($"CallbackId: {info.callbackId}");
@@ -79,9 +66,9 @@ namespace LaxtonSBI
             FeedbackMsg.Text = "Feedback messages to the user is displayed here";
         }
 
-        public async Task<List<DeviceInfoDTO>> deviceInfo()
+        public async Task<List<DeviceInfoDTO>> deviceInfoAPI()
         {
-        
+
             DeviceInfoAPI deviceInfoAPI = new DeviceInfoAPI();
             var jwtHelper = new JwtHelper();
 
@@ -100,75 +87,183 @@ namespace LaxtonSBI
             return response;
         }
 
-        private void FingerprintCaptureBtn_Click(object sender, RoutedEventArgs e)
+
+        private void FaceCaptureBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (isAvailable(SBIConstants.FACE))
+            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+
+            ComboBoxItem item = (ComboBoxItem)FaceDropdown.SelectedItem;
+
+            if (item == null)
             {
-                // capture API
-                //CaptureAPI capture = new CaptureAPI();
+                FeedbackMsg.Text = "Select an option!";
+            }
+            else
+            {
+                string option = item.Content.ToString();
+                string deviceSubId = null;
 
-                // stream API
-                //StreamAPI stream = new StreamAPI();
-                //var response = stream.SendCustomRequestAsync();
+                if (option == "Capture face")
+                {
+                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_FACE_FULLFACE;
+                }
 
-                //Console.WriteLine("Stream response: " + response);
-                //Console.WriteLine("Stream response string: " + response.ToString());
-                //Console.WriteLine("Stream response: " + response.Result);
-                //Console.WriteLine("Stream response: " + response.IsCompleted);
-                //Console.WriteLine("Stream response: " + response.Status);
 
-                StreamAPIAsync();
-                
+                if (isAvailable(SBIConstants.FACE, deviceSubId))
+                {
+                    // Device Info
+                    string key = SBIConstants.FACE + "_" + deviceSubId;
+                    string deviceId = availableDeviceMap[key].deviceId;
+                    Console.WriteLine(key);
+
+
+                    // capture API
+                    //_ = CaptureAPI();
+
+                    // stream API
+                    //_ = StreamAPI(deviceId, deviceSubId);
+
+                }
+                else
+                {
+                    FeedbackMsg.Text = "face device not available!";
+                }
             }
         }
 
-        private async Task StreamAPIAsync()
+        private void FingerprintCaptureBtn_Click(object sender, RoutedEventArgs e)
+        {
+            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+
+            ComboBoxItem item = (ComboBoxItem)FingerprintDropdown.SelectedItem;
+            
+            if(item == null)
+            {
+                FeedbackMsg.Text = "Select an option!";
+            }
+            else
+            {
+                string option = item.Content.ToString();
+                string deviceSubId = null;
+
+                if(option == SBIConstants.ALL_FINGERS)
+                {
+                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_FINGER_SLAP;
+                }
+
+
+                if (isAvailable(SBIConstants.FINGERPRINT, deviceSubId))
+                {
+                    string key = SBIConstants.FINGERPRINT + "_" + deviceSubId;
+                    string deviceId = availableDeviceMap[key].deviceId;
+
+
+                    // capture API
+                    //_ = CaptureAPI();
+
+                    // stream API
+                    //_ = StreamAPI(deviceId, deviceSubId);
+                }
+                else
+                {
+                    FeedbackMsg.Text = "fingerprint scannner not available!";
+                }
+            }
+            
+        }
+
+        private void IrisCaptureBtn_Click(object sender, RoutedEventArgs e)
+        {
+            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+
+            ComboBoxItem item = (ComboBoxItem)IrisDropdown.SelectedItem;
+
+            if (item == null)
+            {
+                FeedbackMsg.Text = "Select an option!";
+            }
+            else
+            {
+                string option = item.Content.ToString();
+                string deviceSubId = null;
+
+                if (option == SBIConstants.ALL_IRISES)
+                {
+                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_IRIS_DOUBLE;
+                }
+                else if (option == SBIConstants.LEFT_IRIS || option == SBIConstants.RIGHT_IRIS)
+                {
+                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_IRIS_SINGLE;
+                }
+
+
+                if (isAvailable(SBIConstants.IRIS, deviceSubId))
+                {
+                    string key = SBIConstants.IRIS + "_" + deviceSubId;
+                    string deviceId = availableDeviceMap[key].deviceId;
+
+                    Console.WriteLine(key);
+                    // capture API
+                    //_ = CaptureAPI();
+
+                    // stream API
+                    //_ = StreamAPI(deviceId, deviceSubId);
+                }
+                else
+                {
+                    FeedbackMsg.Text = "iris scanner not available!";
+                }
+            }
+        }
+
+        private async Task StreamAPI(string deviceId, string deviceSubId)
         {
             StreamAPI streamApi = new StreamAPI();
             StreamRequestDTO streamRequest = new StreamRequestDTO
             {
-                DeviceId = "511",
-                DeviceSubId = "1",
+                DeviceId = deviceId,
+                DeviceSubId = deviceSubId,
                 Timeout = "2000"
             };
 
             Stream responseStream = await streamApi.SendCustomRequestAsync(streamRequest);
             if (responseStream != null)
             {
-                // Handle the response stream as needed
-                // For example, you can read and process the stream data here
                 Console.WriteLine("originalData: " + responseStream);
-                Console.WriteLine("stringData: " + responseStream.);
                 Console.WriteLine("Stream Request Completed");
 
-                
+
             }
         }
 
-
-        private bool isAvailable(string v)
+        private async Task<List<CaptureBiometricsDTO>> CaptureAPI()
         {
-            bool available = true;
-
-            if (v == SBIConstants.FINGERPRINT)
+            CaptureAPI captureApi = new CaptureAPI();
+            CaptureRequestDTO captureRequest = new CaptureRequestDTO
             {
+                // create request body
+            };
 
-            }
-            else if (v == SBIConstants.FACE)
+            string apiResponse_string = await captureApi.SendCustomRequestAsync(captureRequest);
+
+            List<CaptureBiometricsDTO> response = JsonConvert.DeserializeObject<List<CaptureBiometricsDTO>>(apiResponse_string);
+
+            return response;
+        }
+
+        private bool isAvailable(string deviceType, string subType)
+        {
+            bool available = false;
+            string key = deviceType + "_" + subType;
+
+            if (availableDeviceMap.ContainsKey(key) == true)
             {
-
-            }
-            else if (v == SBIConstants.IRIS)
-            {
-
+                available = true;
             }
 
             return available;
         }
 
-        private void FaceCaptureBtn_Click(object sender, RoutedEventArgs e)
-        {
 
-        }
     }
 }

@@ -4,21 +4,24 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using LaxtonSBI.Helper;
 
 namespace LaxtonSBI.API
 {
     public class DeviceInfoAPI
     {
         private readonly HttpClient client;
+        private string URI;
 
         public DeviceInfoAPI()
         {
             client = new HttpClient();
+            URI = SBIConstants.BASE_URI + SBIConstants.INFO;
         }
 
         public async Task<string> SendCustomRequestAsync()
         {
-            using (HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("MOSIPDINFO"), "http://localhost:4503/info"))
+            using (HttpRequestMessage request = new HttpRequestMessage(new HttpMethod(SBIConstants.MOSIP_METHOD_MOSIPDINFO), URI))
             {
                 HttpResponseMessage response = await client.SendAsync(request);
 

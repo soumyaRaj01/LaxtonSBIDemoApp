@@ -18,15 +18,6 @@ namespace LaxtonSBI.Helper
 {
     public class JwtHelper
     {
-
-		//private AsymmetricKeyParameter privateKey = null;
-		//private Org.BouncyCastle.X509.X509Certificate certificate = null;
-		//public string configPath = System.Web.Configuration.WebConfigurationManager.AppSettings["configPath"];
-		//private string pfxPassword = System.Web.Configuration.WebConfigurationManager.AppSettings["KeyPassword"] ?? "MOSIP";
-		//private string keyAlias = System.Web.Configuration.WebConfigurationManager.AppSettings["KeyAlias"] ?? "Device";
-		//private string passkey = System.Web.Configuration.WebConfigurationManager.AppSettings["passkey"];
-
-
 		public JwtSecurityToken DecodeJwt(string jwtToken)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
