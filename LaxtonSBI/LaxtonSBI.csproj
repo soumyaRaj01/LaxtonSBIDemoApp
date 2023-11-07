@@ -158,10 +158,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Media\download.png" />
+    <Resource Include="Media\save_button.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Media\save_button.png" />
+    <Resource Include="Media\eye_scanner.png" />
+    <Resource Include="Media\face_detection.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\eye.png" />
+    <Resource Include="Media\profile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\biometric.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
