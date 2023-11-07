@@ -38,6 +38,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="FreeImageNET, Version=3.17.0.5, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\FreeImageNET.3.17.1\lib\net461\FreeImageNET.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -116,6 +119,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DTO\BiometricsDataDTO.cs" />
     <Compile Include="DTO\CaptureRequestDTO.cs" />
     <Compile Include="DTO\CaptureBiometricsDTO.cs" />
     <Compile Include="DTO\DeviceInfoDTO.cs" />
@@ -123,6 +127,7 @@
     <Compile Include="DTO\DiscoverDTO.cs" />
     <Compile Include="DTO\ErrorMsg.cs" />
     <Compile Include="DTO\StreamRequestDTO.cs" />
+    <Compile Include="Helper\ImageHelper.cs" />
     <Compile Include="Helper\JwtHelper.cs" />
     <Compile Include="Helper\SBIConstants.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -148,6 +153,45 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="bioutils\application.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\BiometricInfo\temp\info.jp2" />
+    <None Include="bioutils\BiometricInfo\temp\info.jp2.iso" />
+    <None Include="bioutils\classes\io\mosip\biometrics\util\test\ApplicationConstant.class">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\classes\io\mosip\biometrics\util\test\BioUtilApplication.class">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\maven-archiver\pom.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\run.sh" />
+    <None Include="bioutils\run_decoder_face.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\run_decoder_finger_jp2000.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\run_decoder_finger_wsq.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\run_decoder_iris.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\run_encoder_face.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\run_encoder_finger_jp2000.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\run_encoder_finger_wsq.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="bioutils\run_encoder_iris.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -170,6 +214,152 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Media\biometric.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bioutils\bioutils-0.0.1-SNAPSHOT.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\biometrics-util-1.2.0.1-SNAPSHOT.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\classmate-1.3.4.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\commons-lang3-3.10.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\hibernate-validator-6.0.9.Final.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jackson-annotations-2.9.0.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jackson-core-2.9.5.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jackson-databind-2.5.4.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jackson-datatype-jdk8-2.9.5.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jackson-datatype-jsr310-2.9.5.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jackson-module-parameter-names-2.9.5.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jai-imageio-core-1.3.0.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jai-imageio-jpeg2000-1.3.0.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\javax.annotation-api-1.3.2.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jboss-logging-3.3.2.Final.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jnbis-2.0.2.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\jul-to-slf4j-1.7.25.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\junit-3.8.1.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\log4j-api-2.10.0.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\log4j-to-slf4j-2.10.0.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\logback-classic-1.2.3.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\logback-core-1.2.3.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\lombok-1.18.20.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\protobuf-java-3.13.0.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\slf4j-api-1.7.25.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\snakeyaml-1.19.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-aop-5.0.6.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-beans-5.0.6.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-boot-2.0.2.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-boot-autoconfigure-2.0.2.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-boot-starter-2.0.2.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-boot-starter-json-2.0.2.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-boot-starter-logging-2.0.2.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-boot-starter-tomcat-2.0.2.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-boot-starter-web-2.0.2.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-context-5.0.6.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-core-5.0.6.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-expression-5.0.6.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-jcl-5.0.6.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-web-5.0.6.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\spring-webmvc-5.0.6.RELEASE.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\tomcat-embed-core-8.5.31.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\tomcat-embed-el-8.5.31.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\tomcat-embed-websocket-8.5.31.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\lib\validation-api-2.0.1.Final.jar">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\maven-status\maven-compiler-plugin\compile\default-compile\createdFiles.lst">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bioutils\maven-status\maven-compiler-plugin\compile\default-compile\inputFiles.lst">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bioutils\BiometricInfo\Face\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

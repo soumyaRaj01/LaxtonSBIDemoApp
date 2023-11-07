@@ -8,13 +8,14 @@ using System.Windows.Controls;
 using LaxtonSBI.API;
 using LaxtonSBI.DTO;
 using LaxtonSBI.Helper;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 namespace LaxtonSBI
 {
     public partial class MainWindow : Window
     {
-
+        private int transactionId = 1111;
         Dictionary<string, DeviceInfoDTO> availableDeviceMap;
 
         public MainWindow()
@@ -24,6 +25,31 @@ namespace LaxtonSBI
             getDeviceInfo();
             InitializeComponent();
 
+            //showSampleImage();
+        }
+
+        private void showSampleImage()
+        {
+            BiometricsDataDTO bio = new BiometricsDataDTO
+            {
+                digitalId = SBIConstants.digitalId,
+                deviceCode = "24ac8f79-7119-44e4-a725-750608103886",
+                deviceServiceVersion = "SB.WIN.001",
+                bioType = "Face",
+                bioSubType = "null",
+                purpose = "Registration",
+                env = "Developer",
+                bioValue = SBIConstants.bioValue,
+                transactionId = "SBI1012-871",
+                timestamp = "2023-09-18T12:26:12Z",
+                requestedScore = "40",
+                qualityScore = "66"
+            };
+
+            List<BiometricsDataDTO> dto = new List<BiometricsDataDTO>();
+            dto.Add(bio);
+
+            showStreamImageAndScore(dto, SBIConstants.FACE, "UNKNOWN");
         }
 
         public async void getDeviceInfo()
@@ -234,19 +260,75 @@ namespace LaxtonSBI
             }
         }
 
-        private async Task<List<CaptureBiometricsDTO>> CaptureAPI()
+        private async Task<List<BiometricsDataDTO>> CaptureAPI(int count, List<string> bioSubType, List<string> exception, DeviceInfoDTO info, DigitalIdDTO digitalInfo)
         {
             CaptureAPI captureApi = new CaptureAPI();
             CaptureRequestDTO captureRequest = new CaptureRequestDTO
             {
-                // create request body
+                env = SBIConstants.ENVIRONMENT_DEVELOPER,
+                purpose = SBIConstants.PURPOSE_REGISTRATION,
+                specVersion = info.specVersion.ToString(),
+                timeout = 10000,
+                captureTime = DateTime.UtcNow.ToString(SBIConstants.TimeStampFormat),
+                transactionId = GetTransactionId(),
+                bio = new List<CaptureRequestBIODTO>
+                {
+                    new CaptureRequestBIODTO
+                    {
+                        type = digitalInfo.type,
+                        count = count.ToString(),
+                        bioSubType = bioSubType,
+                        exception = exception,
+                        requestedScore = "40",
+                        deviceId = info.deviceId,
+                        deviceSubId = info.deviceSubId.ToString(),
+                        previousHash = ""
+                    }
+                }
             };
 
             string apiResponse_string = await captureApi.SendCustomRequestAsync(captureRequest);
 
             List<CaptureBiometricsDTO> response = JsonConvert.DeserializeObject<List<CaptureBiometricsDTO>>(apiResponse_string);
 
-            return response;
+            List<BiometricsDataDTO> biometricsData = new List<BiometricsDataDTO>();
+
+            foreach(CaptureBiometricsDTO dto in response)
+            {
+                BiometricsDataDTO bio = JsonConvert.DeserializeObject<BiometricsDataDTO>(dto.data);
+                biometricsData.Add(bio);
+            }
+
+            return biometricsData;
+        }
+
+        private void showStreamImageAndScore (List<BiometricsDataDTO> biometricsDTO, String type, string bioSubType)
+        {
+            foreach(BiometricsDataDTO bio in biometricsDTO)
+            {
+                byte[] image = Base64UrlEncoder.DecodeBytes(bio.bioValue);
+                byte[] img = ImageHelper.ISOtoBytes(image, type, bioSubType);
+            }
+            
+
+            switch(type)
+            {
+                case SBIConstants.FACE:
+
+                case SBIConstants.FINGERPRINT:
+
+                case SBIConstants.IRIS:
+                    foreach(BiometricsDataDTO bio in biometricsDTO)
+                    {
+
+                    }
+                    break;
+            }
+        }
+
+        private string GetTransactionId()
+        {
+            return transactionId++.ToString();
         }
 
         private bool isAvailable(string deviceType, string subType)
