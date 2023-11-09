@@ -122,6 +122,7 @@
     <Compile Include="DTO\BiometricsDataDTO.cs" />
     <Compile Include="DTO\CaptureRequestDTO.cs" />
     <Compile Include="DTO\CaptureBiometricsDTO.cs" />
+    <Compile Include="DTO\CaptureResponseDTO.cs" />
     <Compile Include="DTO\DeviceInfoDTO.cs" />
     <Compile Include="DTO\DeviceInfoResponseDTO.cs" />
     <Compile Include="DTO\DiscoverDTO.cs" />
@@ -219,7 +220,7 @@
     <Content Include="bioutils\bioutils-0.0.1-SNAPSHOT.jar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="bioutils\lib\biometrics-util-1.2.0.1-SNAPSHOT.jar">
+    <Content Include="bioutils\lib\biometrics-util-1.1.5.jar">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="bioutils\lib\classmate-1.3.4.jar">
@@ -357,6 +358,15 @@
     <Content Include="bioutils\maven-status\maven-compiler-plugin\compile\default-compile\inputFiles.lst">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="SampleData\face_response.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="SampleData\finger_response.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="SampleData\iris_response.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bioutils\BiometricInfo\Face\" />

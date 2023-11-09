@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("bioutils/bioutils-0.0.1-snapshot.jar")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("bioutils/lib/biometrics-util-1.2.0.1-snapshot.jar")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("bioutils/lib/biometrics-util-1.1.5.jar")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("bioutils/lib/classmate-1.3.4.jar")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("bioutils/lib/commons-lang3-3.10.jar")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("bioutils/lib/hibernate-validator-6.0.9.final.jar")]

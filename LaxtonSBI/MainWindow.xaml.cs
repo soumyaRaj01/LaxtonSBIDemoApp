@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using LaxtonSBI.API;
 using LaxtonSBI.DTO;
 using LaxtonSBI.Helper;
@@ -25,31 +26,52 @@ namespace LaxtonSBI
             getDeviceInfo();
             InitializeComponent();
 
-            //showSampleImage();
+            InitSampleImage();
         }
 
-        private void showSampleImage()
+        private void InitSampleImage()
         {
-            BiometricsDataDTO bio = new BiometricsDataDTO
+            
+            string filePath = "D:\\LaxtonSBI\\LaxtonSBI\\SampleData\\face_response.txt";
+            string fingerPath = "D:\\LaxtonSBI\\LaxtonSBI\\SampleData\\finger_response.txt";
+            string irisPath = "D:\\LaxtonSBI\\LaxtonSBI\\SampleData\\iris_response.txt";
+
+
+            string faceContent = File.ReadAllText(filePath);
+            string fingerContent = File.ReadAllText(fingerPath);
+            string irisContent = File.ReadAllText(irisPath);
+
+            CaptureResponseDTO face = JsonConvert.DeserializeObject<CaptureResponseDTO>(faceContent);
+            CaptureResponseDTO finger = JsonConvert.DeserializeObject<CaptureResponseDTO>(fingerContent);
+            CaptureResponseDTO iris = JsonConvert.DeserializeObject<CaptureResponseDTO>(irisContent);
+
+            List<CaptureResponseDTO> dto = new List<CaptureResponseDTO>();
+            dto.Add(face);
+            dto.Add(finger);
+            dto.Add(iris);
+
+            showSampleImage(dto);
+        }
+
+        public void showSampleImage(List<CaptureResponseDTO> dtos)
+        {
+            int cnt = 1;
+            foreach(CaptureResponseDTO dto in dtos)
             {
-                digitalId = SBIConstants.digitalId,
-                deviceCode = "24ac8f79-7119-44e4-a725-750608103886",
-                deviceServiceVersion = "SB.WIN.001",
-                bioType = "Face",
-                bioSubType = "null",
-                purpose = "Registration",
-                env = "Developer",
-                bioValue = SBIConstants.bioValue,
-                transactionId = "SBI1012-871",
-                timestamp = "2023-09-18T12:26:12Z",
-                requestedScore = "40",
-                qualityScore = "66"
-            };
+                List<BiometricsDataDTO> biometricsData = new List<BiometricsDataDTO>();
+                var jwtHelper = new JwtHelper();
 
-            List<BiometricsDataDTO> dto = new List<BiometricsDataDTO>();
-            dto.Add(bio);
+                foreach (CaptureBiometricsDTO bioDto in dto.biometrics)
+                {
+                    BiometricsDataDTO bio = JsonConvert.DeserializeObject<BiometricsDataDTO>(jwtHelper.Decode(bioDto.data, false));
+                    biometricsData.Add(bio);
+                }
 
-            showStreamImageAndScore(dto, SBIConstants.FACE, "UNKNOWN");
+                if (cnt == 1) showCaptureImageAndScore(biometricsData, SBIConstants.FACE);
+                else if(cnt ==2) showCaptureImageAndScore(biometricsData, SBIConstants.FINGERPRINT);
+                else if(cnt == 3) showCaptureImageAndScore(biometricsData, SBIConstants.IRIS);
+                cnt++;
+            }
         }
 
         public async void getDeviceInfo()
@@ -67,22 +89,6 @@ namespace LaxtonSBI
                 string key = digitalId.type + "_" + digitalId.deviceSubType;
 
                 availableDeviceMap.Add(key, info);
-
-                Console.WriteLine(key);
-                //Console.WriteLine(key);
-                //Console.WriteLine("Device Info:");
-                //Console.WriteLine($"CallbackId: {info.callbackId}");
-                //Console.WriteLine($"SpecVersion: {string.Join(", ", info.specVersion)}");
-                //Console.WriteLine($"Env: {info.env}");
-                //Console.WriteLine($"DigitalId: {info.digitalId}");
-                //Console.WriteLine($"DeviceId: {info.deviceId}");
-                //Console.WriteLine($"DeviceCode: {info.deviceCode}");
-                //Console.WriteLine($"Purpose: {info.purpose}");
-                //Console.WriteLine($"ServiceVersion: {info.serviceVersion}");
-                //Console.WriteLine($"DeviceStatus: {info.deviceStatus}");
-                //Console.WriteLine($"Firmware: {info.firmware}");
-                //Console.WriteLine($"Certification: {info.certification}");
-                //Console.WriteLine($"DeviceSubId: {string.Join(", ", info.deviceSubId)}");
             }
 
 
@@ -109,135 +115,6 @@ namespace LaxtonSBI
             }
 
             return response;
-        }
-
-
-        private void FaceCaptureBtn_Click(object sender, RoutedEventArgs e)
-        {
-            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
-
-            ComboBoxItem item = (ComboBoxItem)FaceDropdown.SelectedItem;
-
-            if (item == null)
-            {
-                FeedbackMsg.Text = "Select an option!";
-            }
-            else
-            {
-                string option = item.Content.ToString();
-                string deviceSubId = null;
-
-                if (option == "Capture face")
-                {
-                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_FACE_FULLFACE;
-                }
-
-
-                if (isAvailable(SBIConstants.FACE, deviceSubId))
-                {
-                    // Device Info
-                    string key = SBIConstants.FACE + "_" + deviceSubId;
-                    string deviceId = availableDeviceMap[key].deviceId;
-                    Console.WriteLine(key);
-
-
-                    // capture API
-                    //_ = CaptureAPI();
-
-                    // stream API
-                    //_ = StreamAPI(deviceId, deviceSubId);
-
-                }
-                else
-                {
-                    FeedbackMsg.Text = "face device not available!";
-                }
-            }
-        }
-
-        private void FingerprintCaptureBtn_Click(object sender, RoutedEventArgs e)
-        {
-            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
-
-            ComboBoxItem item = (ComboBoxItem)FingerprintDropdown.SelectedItem;
-            
-            if(item == null)
-            {
-                FeedbackMsg.Text = "Select an option!";
-            }
-            else
-            {
-                string option = item.Content.ToString();
-                string deviceSubId = null;
-
-                if(option == SBIConstants.ALL_FINGERS)
-                {
-                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_FINGER_SLAP;
-                }
-
-
-                if (isAvailable(SBIConstants.FINGERPRINT, deviceSubId))
-                {
-                    string key = SBIConstants.FINGERPRINT + "_" + deviceSubId;
-                    string deviceId = availableDeviceMap[key].deviceId;
-
-
-                    // capture API
-                    //_ = CaptureAPI();
-
-                    // stream API
-                    //_ = StreamAPI(deviceId, deviceSubId);
-                }
-                else
-                {
-                    FeedbackMsg.Text = "fingerprint scannner not available!";
-                }
-            }
-            
-        }
-
-        private void IrisCaptureBtn_Click(object sender, RoutedEventArgs e)
-        {
-            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
-
-            ComboBoxItem item = (ComboBoxItem)IrisDropdown.SelectedItem;
-
-            if (item == null)
-            {
-                FeedbackMsg.Text = "Select an option!";
-            }
-            else
-            {
-                string option = item.Content.ToString();
-                string deviceSubId = null;
-
-                if (option == SBIConstants.ALL_IRISES)
-                {
-                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_IRIS_DOUBLE;
-                }
-                else if (option == SBIConstants.LEFT_IRIS || option == SBIConstants.RIGHT_IRIS)
-                {
-                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_IRIS_SINGLE;
-                }
-
-
-                if (isAvailable(SBIConstants.IRIS, deviceSubId))
-                {
-                    string key = SBIConstants.IRIS + "_" + deviceSubId;
-                    string deviceId = availableDeviceMap[key].deviceId;
-
-                    Console.WriteLine(key);
-                    // capture API
-                    //_ = CaptureAPI();
-
-                    // stream API
-                    //_ = StreamAPI(deviceId, deviceSubId);
-                }
-                else
-                {
-                    FeedbackMsg.Text = "iris scanner not available!";
-                }
-            }
         }
 
         private async Task StreamAPI(string deviceId, string deviceSubId)
@@ -289,38 +166,379 @@ namespace LaxtonSBI
 
             string apiResponse_string = await captureApi.SendCustomRequestAsync(captureRequest);
 
-            List<CaptureBiometricsDTO> response = JsonConvert.DeserializeObject<List<CaptureBiometricsDTO>>(apiResponse_string);
+            CaptureResponseDTO response = JsonConvert.DeserializeObject<CaptureResponseDTO>(apiResponse_string);
 
             List<BiometricsDataDTO> biometricsData = new List<BiometricsDataDTO>();
+            var jwtHelper = new JwtHelper();
 
-            foreach(CaptureBiometricsDTO dto in response)
+            foreach (CaptureBiometricsDTO dto in response.biometrics)
             {
-                BiometricsDataDTO bio = JsonConvert.DeserializeObject<BiometricsDataDTO>(dto.data);
+                BiometricsDataDTO bio = JsonConvert.DeserializeObject<BiometricsDataDTO>(jwtHelper.Decode(dto.data, false));
                 biometricsData.Add(bio);
             }
 
             return biometricsData;
         }
 
-        private void showStreamImageAndScore (List<BiometricsDataDTO> biometricsDTO, String type, string bioSubType)
+        private void FaceCaptureBtn_Click(object sender, RoutedEventArgs e)
         {
+            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+
+            ComboBoxItem item = (ComboBoxItem)FaceDropdown.SelectedItem;
+
+            if (item == null)
+            {
+                FeedbackMsg.Text = "Select an option!";
+            }
+            else
+            {
+                string option = item.Content.ToString();
+                string deviceSubId = null;
+
+                if (option == "Capture face")
+                {
+                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_FACE_FULLFACE;
+                }
+
+
+                if (isAvailable(SBIConstants.FACE, deviceSubId))
+                {
+                    // Device Info
+                    string key = SBIConstants.FACE + "_" + deviceSubId;
+                    string deviceId = availableDeviceMap[key].deviceId;
+                    Console.WriteLine(key);
+
+                    // stream API
+                    //_ = StreamAPI(deviceId, deviceSubId);
+
+                    // Capture API
+                    //Task rsp = collectDataAndCallAPIAsync(option, SBIConstants.FACE);
+                }
+                else
+                {
+                    FeedbackMsg.Text = "face device not available!";
+                }
+            }
+        }
+
+        private void FingerprintCaptureBtn_Click(object sender, RoutedEventArgs e)
+        {
+            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+
+            ComboBoxItem item = (ComboBoxItem)FingerprintDropdown.SelectedItem;
+
+            if (item == null)
+            {
+                FeedbackMsg.Text = "Select an option!";
+            }
+            else
+            {
+                string option = item.Content.ToString();
+
+                if (isAvailable(SBIConstants.FINGERPRINT, SBIConstants.DEVICE_SUBTYPE_FINGER_SLAP))
+                {
+                    string key = SBIConstants.FINGERPRINT + "_" + SBIConstants.DEVICE_SUBTYPE_FINGER_SLAP;
+                    string deviceId = availableDeviceMap[key].deviceId;
+
+                    // stream API
+                    //_ = StreamAPI(deviceId, deviceSubId);
+
+                    // Capture API
+                    //Task rsp = collectDataAndCallAPIAsync(option, SBIConstants.FINGERPRINT);
+                    
+                }
+                else
+                {
+                    FeedbackMsg.Text = "fingerprint scannner not available!";
+                }
+            }
+
+        }
+
+        private void IrisCaptureBtn_Click(object sender, RoutedEventArgs e)
+        {
+            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+
+            ComboBoxItem item = (ComboBoxItem)IrisDropdown.SelectedItem;
+
+            if (item == null)
+            {
+                FeedbackMsg.Text = "Select an option!";
+            }
+            else
+            {
+                string option = item.Content.ToString();
+                string deviceSubId = null;
+
+                if (option == SBIConstants.ALL_IRISES_OPTION)
+                {
+                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_IRIS_DOUBLE;
+                }
+                else if (option == SBIConstants.LEFT_IRIS_OPTION || option == SBIConstants.RIGHT_IRIS_OPTION)
+                {
+                    deviceSubId = SBIConstants.DEVICE_SUBTYPE_IRIS_SINGLE;
+                }
+
+
+                if (isAvailable(SBIConstants.IRIS, deviceSubId))
+                {
+                    string key = SBIConstants.IRIS + "_" + deviceSubId;
+                    string deviceId = availableDeviceMap[key].deviceId;
+
+                    Console.WriteLine(key);
+                    // stream API
+                    //_ = StreamAPI(deviceId, deviceSubId);
+
+                    // Capture API
+                    //Task rsp = collectDataAndCallAPIAsync(option, SBIConstants.IRIS);
+                }
+                else
+                {
+                    FeedbackMsg.Text = "iris scanner not available!";
+                }
+            }
+        }
+
+        private async Task collectDataAndCallAPIAsync(string deviceType, string option)
+        {
+            int count = 0;
+            List<string> bioSubType = new List<string>();
+            List<string> exception = new List<string>();
+            string key = null;
+
+            switch(deviceType)
+            {
+                case SBIConstants.FACE:
+                    key = SBIConstants.FACE + "_" + SBIConstants.DEVICE_SUBTYPE_FACE_FULLFACE;
+
+                    switch (option)
+                    {
+                        case SBIConstants.FACE_OPTION:
+                            count = 1;
+                            bioSubType.Add(SBIConstants.BIO_NAME_UNKNOWN);
+                            break;
+                    }
+                    break;
+
+                case SBIConstants.FINGERPRINT:
+                    key = SBIConstants.FINGERPRINT + "_" + SBIConstants.DEVICE_SUBTYPE_FINGER_SLAP;
+                    
+                    switch (option)
+                    {
+                        case SBIConstants.LEFT_FINGERS_OPTION:
+                            List<CheckBox> leftFingers = new List<CheckBox> {
+                                LeftLittle_check,
+                                LeftRing_check,
+                                LeftMiddle_check,
+                                LeftIndex_check
+                            };
+
+                            for (int i = 0; i < 4; i++)
+                            {
+
+                                if ((bool)leftFingers[i].IsChecked)
+                                {
+                                    count++;
+                                    bioSubType.Add(SBIConstants.BIO_NAME_LEFT_FINGERS[i]);
+                                }
+                                else
+                                {
+                                    exception.Add(SBIConstants.BIO_NAME_LEFT_FINGERS[i]);
+                                }
+                            }
+                            break;
+
+                        case SBIConstants.RIGHT_FINGERS_OPTION:
+                            List<CheckBox> rightFingers = new List<CheckBox> {
+                                RightIndex_check,
+                                RightMiddle_check,
+                                RightRing_check,
+                                RightLittle_check
+                            };
+
+                            for (int i = 0; i < 4; i++)
+                            {
+
+                                if ((bool)rightFingers[i].IsChecked)
+                                {
+                                    count++;
+                                    bioSubType.Add(SBIConstants.BIO_NAME_RIGHT_FINGERS[i]);
+                                }
+                                else
+                                {
+                                    exception.Add(SBIConstants.BIO_NAME_RIGHT_FINGERS[i]);
+                                }
+                            }
+                            break;
+
+                        case SBIConstants.THUMBS_OPTION:
+                            List<CheckBox> thumbs = new List<CheckBox> {
+                                LeftThumb_check,
+                                RightThumb_check
+                            };
+
+                            for (int i = 0; i < 2; i++)
+                            {
+
+                                if ((bool)thumbs[i].IsChecked)
+                                {
+                                    count++;
+                                    bioSubType.Add(SBIConstants.BIO_NAME_THUMB[i]);
+                                }
+                                else
+                                {
+                                    exception.Add(SBIConstants.BIO_NAME_THUMB[i]);
+                                }
+                            }
+
+                            break;
+                    }
+                    break;
+                case SBIConstants.IRIS:
+
+                    switch (option)
+                    {
+                        case SBIConstants.LEFT_IRIS_OPTION:
+                            key = SBIConstants.IRIS + "_" + SBIConstants.DEVICE_SUBTYPE_IRIS_SINGLE;
+                            if ((bool)LeftIris_check.IsChecked)
+                            {
+                                count++;
+                                bioSubType.Add(SBIConstants.BIO_NAME_LEFT_IRIS);
+                            }
+                            else
+                            {
+                                exception.Add(SBIConstants.BIO_NAME_LEFT_IRIS);
+                            }
+                            break;
+
+                        case SBIConstants.RIGHT_IRIS_OPTION:
+                            key = SBIConstants.IRIS + "_" + SBIConstants.DEVICE_SUBTYPE_IRIS_SINGLE;
+                            if ((bool)RightIris_check.IsChecked)
+                            {
+                                count++;
+                                bioSubType.Add(SBIConstants.BIO_NAME_RIGHT_IRIS);
+                            }
+                            else
+                            {
+                                exception.Add(SBIConstants.BIO_NAME_RIGHT_IRIS);
+                            }
+                            break;
+
+                        case SBIConstants.ALL_IRISES_OPTION:
+                            key = SBIConstants.IRIS + "_" + SBIConstants.DEVICE_SUBTYPE_IRIS_DOUBLE;
+                            if ((bool)LeftIris_check.IsChecked)
+                            {
+                                count++;
+                                bioSubType.Add(SBIConstants.BIO_NAME_LEFT_IRIS);
+                            }
+                            else
+                            {
+                                exception.Add(SBIConstants.BIO_NAME_LEFT_IRIS);
+                            }
+
+                            if ((bool)RightIris_check.IsChecked)
+                            {
+                                count++;
+                                bioSubType.Add(SBIConstants.BIO_NAME_RIGHT_IRIS);
+                            }
+                            else
+                            {
+                                exception.Add(SBIConstants.BIO_NAME_RIGHT_IRIS);
+                            }
+                            break;
+                    }
+                    break;
+            }
+
+            DeviceInfoDTO deviceInfo = availableDeviceMap[key];
+            JwtHelper jwtHelper = new JwtHelper();
+            var digitalId = JsonConvert.DeserializeObject<DigitalIdDTO>(jwtHelper.Decode(deviceInfo.digitalId));
+
+            List<BiometricsDataDTO> captureResponse = await CaptureAPI(count, bioSubType, exception, deviceInfo, digitalId);
+
+            showCaptureImageAndScore(captureResponse, deviceType);
+
+        }
+
+        private void showCaptureImageAndScore (List<BiometricsDataDTO> biometricsDTO, string type)
+        {
+            Dictionary<string, BitmapImage> ImagesToShow = new Dictionary<string, BitmapImage>();
+            Dictionary<string, string> ScoresToShow = new Dictionary<string, string>();
+
             foreach(BiometricsDataDTO bio in biometricsDTO)
             {
-                byte[] image = Base64UrlEncoder.DecodeBytes(bio.bioValue);
-                byte[] img = ImageHelper.ISOtoBytes(image, type, bioSubType);
+                byte[] isoImage = Base64UrlEncoder.DecodeBytes(bio.bioValue);
+                byte[] img = ImageHelper.ISOtoBytes(isoImage, type);
+
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = new MemoryStream(img);
+                bitmapImage.EndInit();
+
+                if (type == SBIConstants.FACE) ImagesToShow.Add("FACE", bitmapImage);
+                else ImagesToShow.Add(bio.bioSubType, bitmapImage);
+                ScoresToShow.Add(bio.bioSubType, bio.qualityScore);
             }
             
 
             switch(type)
             {
                 case SBIConstants.FACE:
+                    FaceContent.Source = ImagesToShow["FACE"];
+                    break;
 
                 case SBIConstants.FINGERPRINT:
+                    foreach(KeyValuePair<string, BitmapImage> entry in ImagesToShow)
+                    {
+                        switch(entry.Key)
+                        {
+                            case SBIConstants.BIO_NAME_LEFT_LITTLE:
+                                LeftLittle_img.Source = entry.Value;
+                                
+                                break;
+                            case SBIConstants.BIO_NAME_LEFT_RING:
+                                LeftRing_img.Source = entry.Value;
+                                break;
+                            case SBIConstants.BIO_NAME_LEFT_MIDDLE:
+                                LeftMiddle_img.Source = entry.Value;
+                                break;
+                            case SBIConstants.BIO_NAME_LEFT_INDEX:
+                                LeftIndex_img.Source = entry.Value;
+                                break;
+                            case SBIConstants.BIO_NAME_LEFT_THUMB:
+                                LeftThumb_img.Source = entry.Value;
+                                break;
+                            case SBIConstants.BIO_NAME_RIGHT_THUMB:
+                                RightThumb_img.Source = entry.Value;
+                                break;
+                            case SBIConstants.BIO_NAME_RIGHT_INDEX:
+                                RightIndex_img.Source = entry.Value;
+                                break;
+                            case SBIConstants.BIO_NAME_RIGHT_MIDDLE:
+                                RightMiddle_img.Source = entry.Value;
+                                break;
+                            case SBIConstants.BIO_NAME_RIGHT_RING:
+                                RightRing_img.Source = entry.Value;
+                                break;
+                            case SBIConstants.BIO_NAME_RIGHT_LITTLE:
+                                RightLittle_img.Source = entry.Value;
+                                break;
+                        }
+                    }
+                    break;
 
                 case SBIConstants.IRIS:
-                    foreach(BiometricsDataDTO bio in biometricsDTO)
+                    foreach (KeyValuePair<string, BitmapImage> entry in ImagesToShow)
                     {
-
+                        switch(entry.Key)
+                        {
+                            case SBIConstants.BIO_NAME_LEFT_IRIS:
+                                LeftIris_img.Source = entry.Value;
+                                break;
+                            case SBIConstants.BIO_NAME_RIGHT_IRIS:
+                                RightIris_img.Source = entry.Value;
+                                break;
+                        }
                     }
                     break;
             }

@@ -1,39 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Pkcs;
-using Org.BouncyCastle.Security;
-using System.IdentityModel.Tokens.Jwt;
-
+using System;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace LaxtonSBI.Helper
 {
     public class JwtHelper
-    {
-		public JwtSecurityToken DecodeJwt(string jwtToken)
-		{
-			var tokenHandler = new JwtSecurityTokenHandler();
-			return tokenHandler.ReadToken(jwtToken) as JwtSecurityToken;
-		}
-
+    {	
 		public string Decode(string token, bool verify = true)
 		{
 			string[] parts = token.Split('.');
-
 			string payload = parts[1];
-
 
 			string payloadJson = Encoding.UTF8.GetString(Base64UrlDecode(payload));
 			JObject payloadData = JObject.Parse(payloadJson);
-
 
 			return payloadData.ToString();
 		}

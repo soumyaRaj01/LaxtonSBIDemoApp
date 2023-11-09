@@ -12,19 +12,19 @@ namespace LaxtonSBI.Helper
     public class ImageHelper
     {
         public static string fileName { get; set; }
-        public static string JP2ImageFileName { get; set; } = "info.jp2";
-        public static string ISOImageFileName { get; set; } = "info.jp2.iso";
+        public static string JPGImageFileName { get; set; }
+        public static string ISOImageFileName { get; set; }
         public static string BatchJobPath { get; set; } = AppDomain.CurrentDomain.BaseDirectory + @"bioutils";
         public static string ImagePath { get; set; } = AppDomain.CurrentDomain.BaseDirectory + @"bioutils\BiometricInfo\";
 
-        public static byte[] ISOtoBytes(byte[] img, string type, string bioSubType)
+        public static byte[] ISOtoBytes(byte[] img, string type)
         {
-            fileName = "info_" + bioSubType;
-            JP2ImageFileName = fileName + ".jp2";
-            ISOImageFileName = fileName + ".iso";
+            //fileName = "info_" + bioSubType;
+            //JPGImageFileName = fileName + ".iso.jpg";
+            //ISOImageFileName = fileName + ".iso";
 
-            //JP2ImageFileName = "info.jp2";
-            //ISOImageFileName = "info.iso";
+            JPGImageFileName = "info.iso.jpg";
+            ISOImageFileName = "info.iso";
 
             DirectoryInfo di = new DirectoryInfo(ImagePath + type);
 
@@ -46,13 +46,13 @@ namespace LaxtonSBI.Helper
             File.WriteAllBytes(ImagePath + type + "\\" + ISOImageFileName, img);
 
             //TODO convert ISO to JP2 Image using the JAVA utility
-            var JP2Image = ISOtoJP2(ImagePath + type, JP2ImageFileName, type, bioSubType);
+            var JP2Image = ISOtoJP2(ImagePath + type, JPGImageFileName, type);
             return JP2Image;
         }
 
-        public static byte[] ISOtoJP2(string ISOPath, string JP2ImageFileName, string type, string bioSubType)
+        public static byte[] ISOtoJP2(string ISOPath, string JP2ImageFileName, string type)
         {
-            string batchjobCommand = GetBatchJobCommand(type, bioSubType);
+            string batchjobCommand = GetBatchJobCommand(type);
             int exitCode;
 
             ProcessStartInfo pInfo = new ProcessStartInfo("cmd.exe", "/c " + batchjobCommand)
@@ -74,12 +74,12 @@ namespace LaxtonSBI.Helper
             return JP2ImageBytes;
         }
 
-        private static string GetBatchJobCommand(string type, string bioSubType)
+        private static string GetBatchJobCommand(string type)
         {
             string imageType = "io.mosip.biometrics.util.image.type.jp2000=0";
             string converTo = "io.mosip.biometrics.util.convert.iso.to.image=1";
             string converionFile = "mosip.mock.sbi.biometric.type.file.image=" + ISOImageFileName;
-            string biometricSubType = "mosip.mock.sbi.biometric.subtype.unknown=\"" + bioSubType + "\"";
+            string biometricSubType = "mosip.mock.sbi.biometric.subtype.unknown=UNKNOWN";
             string purpose = "io.mosip.biometrics.util.purpose.registration=REGISTRATION";
 
             string biometricFaceFolderPath = "mosip.mock.sbi.biometric.type.face.folder.path=/BiometricInfo/Face/";

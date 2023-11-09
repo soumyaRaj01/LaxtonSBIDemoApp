@@ -71,10 +71,10 @@
 
                             <!-- Fingerprint Title -->
                             <Grid Grid.Row="0">
-                                <TextBlock Name ="FingerprintsTitle"
-                                           VerticalAlignment="Center"
-                                           Margin="10,0,0,0"
-                                           Text="Fingerprints" FontSize="15"/>
+                                <Viewbox MaxWidth="110"   Stretch="Uniform"  StretchDirection="Both" HorizontalAlignment="Left" Margin="10,0,0,0">
+                                    <TextBlock Name ="FingerprintsTitle" Text="Fingerprints"/>    
+                                </Viewbox>
+                                
                             </Grid>
 
                             <!-- Fingerprint Display -->
@@ -93,9 +93,10 @@
 
                                     <!-- Left Title -->
                                     <Grid Grid.Row="0">
-                                        <TextBlock Name ="LeftFingerTitle"
-                                           VerticalAlignment="Top" HorizontalAlignment="Center"
-                                           Text="Left Hand" FontSize="15"/>
+                                        <Viewbox MaxWidth="90" Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                            <TextBlock Name ="LeftFingerTitle" Text="Left Hand" />    
+                                        </Viewbox>
+                                        
                                     </Grid>
 
                                     <!-- Left Fingers Display -->
@@ -108,55 +109,151 @@
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
 
-                                        <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
-                                            <Border Grid.Row="1"
+                                        <Grid Grid.Column="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Left_1" Source="Media\biometric.png" />
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="LeftLittle_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="LeftLittle_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
                                             <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Green" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="LeftLittle_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />    
+                                                </Viewbox>
+                                                
+                                            </Border>
+                                            
+                                        </Grid>
+
+                                        <Grid Grid.Column="1">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Left_2" Source="Media\biometric.png"/>
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="LeftRing_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="LeftRing_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
                                             <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Cyan" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="LeftRing_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />
+                                                </Viewbox>
+
+                                            </Border>
+
+                                        </Grid>
+
+                                        <Grid Grid.Column="2">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Left_3" Source="Media\biometric.png"/>
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="LeftMiddle_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="LeftMiddle_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="3" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
                                             <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Yellow" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="LeftMiddle_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />
+                                                </Viewbox>
+
+                                            </Border>
+
+                                        </Grid>
+
+                                        <Grid Grid.Column="3">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Left_4" Source="Media\biometric.png"/>
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="LeftIndex_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="LeftIndex_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="4" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
                                             <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Orange" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="LeftIndex_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />
+                                                </Viewbox>
+
+                                            </Border>
+
+                                        </Grid>
+
+                                        <Grid Grid.Column="4">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Left_5" Source="Media\biometric.png"/>
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="LeftThumb_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="LeftThumb_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
+                                            <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Red" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="LeftThumb_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />
+                                                </Viewbox>
+
+                                            </Border>
+
+                                        </Grid>
+
 
                                     </Grid>
 
@@ -172,9 +269,9 @@
 
                                     <!-- Right Title -->
                                     <Grid Grid.Row="0">
-                                        <TextBlock Name ="RightFingerTitle"
-                                           VerticalAlignment="Top" HorizontalAlignment="Center"
-                                           Text="Right Hand" FontSize="15"/>
+                                        <Viewbox MaxWidth="90" Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                            <TextBlock Name ="RightFingerTitle" Text="Right Hand" />
+                                        </Viewbox>
                                     </Grid>
 
                                     <!-- Right Fingers Display -->
@@ -187,55 +284,150 @@
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
 
-                                        <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
-                                            <Border Grid.Row="1"
+                                        <Grid Grid.Column="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Right_1" Source="Media\biometric.png"/>
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="RightThumb_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="RightThumb_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
                                             <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Green" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="RightThumb_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />
+                                                </Viewbox>
+
+                                            </Border>
+
+                                        </Grid>
+
+                                        <Grid Grid.Column="1">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Right_2" Source="Media\biometric.png"/>
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="RightIndex_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="RightIndex_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
                                             <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Cyan" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="RightIndex_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />
+                                                </Viewbox>
+
+                                            </Border>
+
+                                        </Grid>
+
+                                        <Grid Grid.Column="2">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Right_3" Source="Media\biometric.png"/>
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="RightMiddle_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="RightMiddle_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="3" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
                                             <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Yellow" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="RightMiddle_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />
+                                                </Viewbox>
+
+                                            </Border>
+
+                                        </Grid>
+
+                                        <Grid Grid.Column="3">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Right_4" Source="Media\biometric.png"/>
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="RightRing_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="RightRing_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="4" Orientation="Vertical" HorizontalAlignment="Center" Margin="3">
                                             <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Orange" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="RightRing_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />
+                                                </Viewbox>
+
+                                            </Border>
+
+                                        </Grid>
+
+                                        <Grid Grid.Column="4">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="70*"/>
+                                                <RowDefinition Height="15*"/>
+                                                <RowDefinition Height="15*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Border Grid.Row="0"
                                                 BorderBrush="LightBlue" BorderThickness="3"
                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                CornerRadius="4">
-                                                <Image Name="Right_5" Source="Media\biometric.png"/>
+                                                CornerRadius="4" >
+                                                <Grid>
+                                                    <Image Name="RightLittle_img" Source="Media\biometric.png" Stretch="Uniform"   />
+                                                    <CheckBox Name="RightLittle_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                                </Grid>
                                             </Border>
 
-                                        </StackPanel>
+                                            <Border Grid.Row="1"
+                                                BorderBrush="LightBlue" BorderThickness="1" Margin="1,2,1,0" Background="Red" CornerRadius="2" Padding="0">
+                                                <Viewbox Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Center">
+                                                    <TextBlock Name="RightLittle_score" Text="100"
+                                                           TextAlignment="Center"
+                                                           Padding="0" Foreground="White" />
+                                                </Viewbox>
+
+                                            </Border>
+
+                                        </Grid>
                                     </Grid>
 
                                 </Grid>
@@ -254,9 +446,9 @@
                                 <ComboBox Grid.Column="0" Margin="0,0,5,0" 
                                           Name="FingerprintDropdown"  
                                           HorizontalAlignment="Right" VerticalAlignment="Center" Width="150" >
-                                    <ComboBoxItem Content="Capture all fingers"></ComboBoxItem>
                                     <ComboBoxItem Content="Capture left fingers"></ComboBoxItem>
                                     <ComboBoxItem Content="Capture right fingers"></ComboBoxItem>
+                                    <ComboBoxItem Content="Capture thumbs "></ComboBoxItem>
                                 </ComboBox>
 
                                 <Button Grid.Column="1" Name="FingerprintCaptureBtn" Content="Capture"
@@ -297,11 +489,9 @@
 
                                 <!-- Face Title -->
                                 <Grid Grid.Row="0">
-                                    <TextBlock Name="FaceTitle"
-                                               VerticalAlignment="Center"
-                                               Margin="10,0,0,0"
-                                               Text="Face" FontSize="15"/>
-
+                                    <Viewbox MaxWidth="50" Stretch="Uniform"  StretchDirection="Both" HorizontalAlignment="Left" Margin="10,0,0,0">
+                                        <TextBlock Name ="FaceTitle" Text="Face" />
+                                    </Viewbox>
                                     <!--
                                     <CheckBox x:Name="LEDcheck" 
                                               HorizontalAlignment="Right" VerticalAlignment="Center"
@@ -368,10 +558,9 @@
 
                                 <!-- Iris Title -->
                                 <Grid Grid.Row="0">
-                                    <TextBlock Name="IrisTitle"
-                                               VerticalAlignment="Center"
-                                               Margin="10,0,0,0"
-                                               Text="Iris" FontSize="15"/>
+                                    <Viewbox MaxWidth="35" Stretch="Uniform"  StretchDirection="Both" HorizontalAlignment="Left" Margin="10,0,0,0">
+                                        <TextBlock Name ="IrisTitle" Text="Iris"/>
+                                    </Viewbox>
                                 </Grid>
 
                                 <!-- Iris Content -->
@@ -386,8 +575,10 @@
                                             BorderBrush="LightBlue" BorderThickness="3"
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
                                             CornerRadius="4">
-
-                                            <Image Name="LeftIrisContent" Source="Media\eye.png"/>
+                                            <Grid>
+                                                <Image Name="LeftIris_img" Source="Media\eye.png" />
+                                                <CheckBox Name="LeftIris_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                            </Grid>
                                         </Border>
                                     </Grid>
 
@@ -397,8 +588,10 @@
                                             HorizontalAlignment="Center" VerticalAlignment="Center"
 
                                             CornerRadius="4">
-
-                                            <Image Name="RightIrisContent" Source="Media\eye.png"/>
+                                            <Grid>
+                                                <Image Name="RightIris_img" Source="Media\eye.png" />
+                                                <CheckBox Name="RightIris_check" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" />
+                                            </Grid>
                                         </Border>
                                     </Grid>
 
