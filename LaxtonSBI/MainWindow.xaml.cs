@@ -28,7 +28,7 @@ namespace LaxtonSBI
             //getDeviceInfo();
             InitializeComponent();
 
-            InitSampleImage();
+            //InitSampleImage();
         }
 
         private void InitSampleImage()
@@ -137,7 +137,7 @@ namespace LaxtonSBI
             return response;
         }
 
-        private async Task StreamAPI(string deviceId, string deviceSubId)
+        private void StreamAPI(string deviceId, string deviceSubId)
         {
             StreamAPI streamApi = new StreamAPI();
             StreamRequestDTO streamRequest = new StreamRequestDTO
@@ -147,7 +147,7 @@ namespace LaxtonSBI
                 Timeout = "2000"
             };
 
-            Stream responseStream = await streamApi.SendCustomRequestAsync(streamRequest);
+            Stream responseStream = streamApi.SendCustomRequestAsync(streamRequest);
             if (responseStream != null)
             {
                 Console.WriteLine("originalData: " + responseStream);
@@ -227,6 +227,8 @@ namespace LaxtonSBI
                     string key = SBIConstants.FACE + "_" + deviceSubId;
                     string deviceId = availableDeviceMap[key].deviceId;
                     Console.WriteLine(key);
+
+                    StreamAPI(deviceId, deviceSubId);
 
                     // stream API
                     //_ = StreamAPI(deviceId, deviceSubId);
