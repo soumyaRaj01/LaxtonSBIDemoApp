@@ -39,7 +39,7 @@
             <!-- Feedback Message-->
             <Grid Grid.Row="2">
                 <TextBlock Name="FeedbackMsg"
-                           Text="Scanning for Devices..." FontSize="15" FontStyle="Italic" FontWeight="Light"
+                           Text="Feedback messages to the user is displayed here" FontSize="15" FontStyle="Italic" FontWeight="Light"
                            HorizontalAlignment="Center" VerticalAlignment="Center"
                     />
             </Grid>
@@ -643,19 +643,34 @@
                 <Grid Grid.Column="1">
 
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="20*"/>
                         <RowDefinition Height="10*"/>
-                        <RowDefinition Height="45*"/>
-                        <RowDefinition Height="45*"/>
+                        <RowDefinition Height="55*"/>
+                        <RowDefinition Height="15*"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0">
+                    <Button Grid.Row="0" Name="DeviceScanBtn" Content="Scan for Devices"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        Height="20" Width="130"
+                                        Margin="0,10,0,0"
+                                        Background="Blue" Foreground="White"
+                                        FontWeight="Medium" 
+                                        Click="DeviceScanBtn_Click">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <Grid Grid.Row="1">
                         <TextBlock Name ="CaptureTitle" 
                                HorizontalAlignment="Center" VerticalAlignment="Bottom"
                                Margin="0,0,0,0"
                                Text="Capture Stream" FontSize="15"/>
                     </Grid>
 
-                    <Border Grid.Row="1"
+                    <Border Grid.Row="2"
                                     BorderBrush="LightBlue" BorderThickness="3"
                                     HorizontalAlignment="Center" VerticalAlignment="Center"
                                     CornerRadius="4">
@@ -663,7 +678,7 @@
                     </Border>
 
 
-                    <Button Grid.Row="2" Name="LastCaptureBtn" Content="Retry Last Capture"
+                    <Button Grid.Row="3" Name="LastCaptureBtn" Content="Retry Last Capture"
                                         HorizontalAlignment="Center" VerticalAlignment="Top"
                                         Height="20" Width="130"
                                         Margin="0,10,0,0"

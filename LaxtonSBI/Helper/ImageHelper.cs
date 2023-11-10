@@ -46,11 +46,11 @@ namespace LaxtonSBI.Helper
             File.WriteAllBytes(ImagePath + type + "\\" + ISOImageFileName, img);
 
             //TODO convert ISO to JP2 Image using the JAVA utility
-            var JP2Image = ISOtoJP2(ImagePath + type, JPGImageFileName, type);
-            return JP2Image;
+            var JPGImage = ISOtoJP2(ImagePath + type, JPGImageFileName, type);
+            return JPGImage;
         }
 
-        public static byte[] ISOtoJP2(string ISOPath, string JP2ImageFileName, string type)
+        public static byte[] ISOtoJP2(string ISOPath, string JPGImageFileName, string type)
         {
             string batchjobCommand = GetBatchJobCommand(type);
             int exitCode;
@@ -69,7 +69,7 @@ namespace LaxtonSBI.Helper
             exitCode = p.ExitCode;
             p.Close();
 
-            var JP2ImageBytes = File.ReadAllBytes(ISOPath + @"\" + JP2ImageFileName);
+            var JP2ImageBytes = File.ReadAllBytes(ISOPath + @"\" + JPGImageFileName);
 
             return JP2ImageBytes;
         }

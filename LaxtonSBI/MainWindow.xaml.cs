@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using LaxtonSBI.API;
 using LaxtonSBI.DTO;
 using LaxtonSBI.Helper;
@@ -23,7 +25,7 @@ namespace LaxtonSBI
         {
             availableDeviceMap = new Dictionary<string, DeviceInfoDTO>();
 
-            getDeviceInfo();
+            //getDeviceInfo();
             InitializeComponent();
 
             InitSampleImage();
@@ -76,6 +78,9 @@ namespace LaxtonSBI
 
         public async void getDeviceInfo()
         {
+            FeedbackMsg.Text = "Scanning for Devices...";
+
+            availableDeviceMap.Clear();
 
             // Device Info API call
             List<DeviceInfoDTO> infoResponse = await deviceInfoAPI();
@@ -93,7 +98,22 @@ namespace LaxtonSBI
 
 
             Console.WriteLine("Device Info Recieved");
-            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+
+            FeedbackMsg.Text = "Device Scan Completed!";
+        }
+
+        public static void DelayAction(int millisecond, Action action)
+        {
+            var timer = new DispatcherTimer();
+            timer.Tick += delegate
+
+            {
+                action.Invoke();
+                timer.Stop();
+            };
+
+            timer.Interval = TimeSpan.FromMilliseconds(millisecond);
+            timer.Start();
         }
 
         public async Task<List<DeviceInfoDTO>> deviceInfoAPI()
@@ -562,6 +582,9 @@ namespace LaxtonSBI
             return available;
         }
 
-
+        private void DeviceScanBtn_Click(object sender, RoutedEventArgs e)
+        {
+            getDeviceInfo();
+        }
     }
 }

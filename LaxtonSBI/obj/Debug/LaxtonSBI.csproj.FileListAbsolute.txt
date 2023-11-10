@@ -105,3 +105,4 @@ D:\LaxtonSBI\LaxtonSBI\obj\Debug\LaxtonSBI.csproj.CoreCompileInputs.cache
 D:\LaxtonSBI\LaxtonSBI\obj\Debug\LaxtonSBI.csproj.CopyComplete
 D:\LaxtonSBI\LaxtonSBI\obj\Debug\LaxtonSBI.exe
 D:\LaxtonSBI\LaxtonSBI\obj\Debug\LaxtonSBI.pdb
+D:\LaxtonSBI\LaxtonSBI\obj\Debug\LaxtonSBI.csproj.AssemblyReference.cache
