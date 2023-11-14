@@ -29,7 +29,7 @@ namespace LaxtonSBI
             availableDeviceMap = new Dictionary<string, DeviceInfoDTO>();
             capturedImages = new Dictionary<string, byte[]>();
 
-            
+
             getDeviceInfo();
             InitializeComponent();
 
@@ -38,7 +38,7 @@ namespace LaxtonSBI
 
         private void InitSampleImage()
         {
-            
+
             string filePath = "D:\\LaxtonSBI\\LaxtonSBI\\SampleData\\face_response.txt";
             string fingerPath = "D:\\LaxtonSBI\\LaxtonSBI\\SampleData\\finger_response.txt";
             string irisPath = "D:\\LaxtonSBI\\LaxtonSBI\\SampleData\\iris_response.txt";
@@ -63,7 +63,7 @@ namespace LaxtonSBI
         public void showSampleImage(List<CaptureResponseDTO> dtos)
         {
             int cnt = 1;
-            foreach(CaptureResponseDTO dto in dtos)
+            foreach (CaptureResponseDTO dto in dtos)
             {
                 List<BiometricsDataDTO> biometricsData = new List<BiometricsDataDTO>();
                 var jwtHelper = new JwtHelper();
@@ -75,8 +75,8 @@ namespace LaxtonSBI
                 }
 
                 if (cnt == 1) showCaptureImageAndScore(biometricsData, SBIConstants.FACE);
-                else if(cnt ==2) showCaptureImageAndScore(biometricsData, SBIConstants.FINGERPRINT);
-                else if(cnt == 3) showCaptureImageAndScore(biometricsData, SBIConstants.IRIS);
+                else if (cnt == 2) showCaptureImageAndScore(biometricsData, SBIConstants.FINGERPRINT);
+                else if (cnt == 3) showCaptureImageAndScore(biometricsData, SBIConstants.IRIS);
                 cnt++;
             }
         }
@@ -92,7 +92,7 @@ namespace LaxtonSBI
 
             // Update DeviceInfoMap
             var jwtHelper = new JwtHelper();
-            
+
             foreach (DeviceInfoDTO info in infoResponse)
             {
                 var digitalId = JsonConvert.DeserializeObject<DigitalIdDTO>(jwtHelper.Decode(info.digitalId, false));
@@ -153,7 +153,13 @@ namespace LaxtonSBI
             };
 
             Stream responseStream = streamApi.SendCustomRequestAsync(streamRequest);
-            int cnt = 1;
+
+            Thread thread = new Thread(() => Worker(responseStream));
+            thread.Start();
+        }
+
+        private void Worker(Stream responseStream)
+        {
             while (null != responseStream)
             {
                 try
@@ -165,12 +171,8 @@ namespace LaxtonSBI
                     bitmapImage.StreamSource = new MemoryStream(imageBytes);
                     bitmapImage.EndInit();
 
-                    StreamContent.Source = bitmapImage;
-
-                    //ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
-                    //Image img = new Image(imageStream);
-                    File.WriteAllBytes(@"D:\LaxtonSBI\LaxtonSBI\bin\Debug\bioutils\BiometricInfo\Face\" + "img_" + cnt + ".jpg", imageBytes);
-                    cnt++;
+                    bitmapImage.Freeze();
+                    Dispatcher.BeginInvoke(new ThreadStart(delegate { StreamContent.Source = bitmapImage; }));
                 }
                 catch (Exception t)
                 {
@@ -299,7 +301,7 @@ namespace LaxtonSBI
 
         private void FaceCaptureBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
 
             ComboBoxItem item = (ComboBoxItem)FaceDropdown.SelectedItem;
 
@@ -342,7 +344,7 @@ namespace LaxtonSBI
 
         private void FingerprintCaptureBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
 
             ComboBoxItem item = (ComboBoxItem)FingerprintDropdown.SelectedItem;
 
@@ -364,7 +366,7 @@ namespace LaxtonSBI
 
                     // Capture API
                     //Task rsp = collectDataAndCallAPIAsync(option, SBIConstants.FINGERPRINT);
-                    
+
                 }
                 else
                 {
@@ -376,7 +378,7 @@ namespace LaxtonSBI
 
         private void IrisCaptureBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
 
             ComboBoxItem item = (ComboBoxItem)IrisDropdown.SelectedItem;
 
@@ -425,7 +427,7 @@ namespace LaxtonSBI
             List<string> exception = new List<string>();
             string key = null;
 
-            switch(deviceType)
+            switch (deviceType)
             {
                 case SBIConstants.FACE:
                     key = SBIConstants.FACE + "_" + SBIConstants.DEVICE_SUBTYPE_FACE_FULLFACE;
@@ -441,7 +443,7 @@ namespace LaxtonSBI
 
                 case SBIConstants.FINGERPRINT:
                     key = SBIConstants.FINGERPRINT + "_" + SBIConstants.DEVICE_SUBTYPE_FINGER_SLAP;
-                    
+
                     switch (option)
                     {
                         case SBIConstants.LEFT_FINGERS_OPTION:
@@ -579,12 +581,12 @@ namespace LaxtonSBI
 
         }
 
-        private void showCaptureImageAndScore (List<BiometricsDataDTO> biometricsDTO, string type)
+        private void showCaptureImageAndScore(List<BiometricsDataDTO> biometricsDTO, string type)
         {
             Dictionary<string, BitmapImage> ImagesToShow = new Dictionary<string, BitmapImage>();
             Dictionary<string, string> ScoresToShow = new Dictionary<string, string>();
 
-            foreach(BiometricsDataDTO bio in biometricsDTO)
+            foreach (BiometricsDataDTO bio in biometricsDTO)
             {
                 byte[] isoImage = Base64UrlEncoder.DecodeBytes(bio.bioValue);
                 byte[] img = ImageHelper.ISOtoBytes(isoImage, type);
@@ -606,18 +608,18 @@ namespace LaxtonSBI
                 }
                 ScoresToShow.Add(bio.bioSubType, bio.qualityScore);
             }
-            
 
-            switch(type)
+
+            switch (type)
             {
                 case SBIConstants.FACE:
                     FaceContent.Source = ImagesToShow["FACE"];
                     break;
 
                 case SBIConstants.FINGERPRINT:
-                    foreach(KeyValuePair<string, BitmapImage> entry in ImagesToShow)
+                    foreach (KeyValuePair<string, BitmapImage> entry in ImagesToShow)
                     {
-                        switch(entry.Key)
+                        switch (entry.Key)
                         {
                             case SBIConstants.BIO_NAME_LEFT_LITTLE:
                                 LeftLittle_img.Source = entry.Value;
@@ -657,7 +659,7 @@ namespace LaxtonSBI
                 case SBIConstants.IRIS:
                     foreach (KeyValuePair<string, BitmapImage> entry in ImagesToShow)
                     {
-                        switch(entry.Key)
+                        switch (entry.Key)
                         {
                             case SBIConstants.BIO_NAME_LEFT_IRIS:
                                 LeftIris_img.Source = entry.Value;
@@ -691,7 +693,7 @@ namespace LaxtonSBI
 
         private void DeviceScanBtn_Click(object sender, RoutedEventArgs e)
         {
-           
+
             getDeviceInfo();
         }
 
