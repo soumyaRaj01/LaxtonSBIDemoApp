@@ -18,7 +18,8 @@
         <Button Grid.Column="0" 
                 Name="SaveBtn"
                 HorizontalAlignment="Left" VerticalAlignment="Bottom"
-                Margin="5">
+                Margin="5"
+                Click="SaveBtn_Click">
             <Image Source="Media\save_button.png"></Image>
         </Button>
 
@@ -39,7 +40,7 @@
             <!-- Feedback Message-->
             <Grid Grid.Row="2">
                 <TextBlock Name="FeedbackMsg"
-                           Text="Feedback messages to the user is displayed here" FontSize="15" FontStyle="Italic" FontWeight="Light"
+                           FontSize="15" FontStyle="Italic" FontWeight="Light"
                            HorizontalAlignment="Center" VerticalAlignment="Center"
                     />
             </Grid>
@@ -674,7 +675,7 @@
                                     BorderBrush="LightBlue" BorderThickness="3"
                                     HorizontalAlignment="Center" VerticalAlignment="Center"
                                     CornerRadius="4">
-                        <MediaElement Name="StreamContent"/>
+                        <Image Name="StreamContent"/>
                     </Border>
 
 

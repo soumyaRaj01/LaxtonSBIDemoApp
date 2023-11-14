@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using LaxtonSBI.DTO;
 using Newtonsoft.Json;
 
@@ -68,24 +69,32 @@ namespace LaxtonSBI.API
                     //StreamReader myStreamReader = new StreamReader(responseStream, Encoding.Default);
 
                     //string pageContent = myStreamReader.ReadToEnd();
-                    int cnt = 1;
-                    while (null != responseStream)
-                    {
-                        try
-                        {
-                            var imageBytes = retrieveNextImage(responseStream);
-                            //ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
-                            //Image img = new Image(imageStream);
-                            File.WriteAllBytes(@"D:\LaxtonRepo\LaxtonUILatest\LaxtonSBIDemoApp\LaxtonSBI\bin\Debug\bioutils\BiometricInfo\Face\" + "img_" + cnt + ".jpg", imageBytes);
-                            cnt++;
-                        }
-                        catch (Exception t)
-                        {
-                            responseStream = null;
-                        }
-                    }
+                    //int cnt = 1;
+                    //while (null != responseStream)
+                    //{
+                    //    try
+                    //    {
+                    //        var imageBytes = retrieveNextImage(responseStream);
 
-                    return null;
+                    //        BitmapImage bitmapImage = new BitmapImage();
+                    //        bitmapImage.BeginInit();
+                    //        bitmapImage.StreamSource = new MemoryStream(imageBytes);
+                    //        bitmapImage.EndInit();
+
+                            
+
+                    //        //ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
+                    //        //Image img = new Image(imageStream);
+                    //        File.WriteAllBytes(@"D:\LaxtonSBI\LaxtonSBI\bin\Debug\bioutils\BiometricInfo\Face\" + "img_" + cnt + ".jpg", imageBytes);
+                    //        cnt++;
+                    //    }
+                    //    catch (Exception t)
+                    //    {
+                    //        responseStream = null;
+                    //    }
+                    //}
+
+                    return responseStream;
                 }
                 else
                 {

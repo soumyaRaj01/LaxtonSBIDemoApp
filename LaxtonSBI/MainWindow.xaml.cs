@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,12 +22,15 @@ namespace LaxtonSBI
     {
         private int transactionId = 1111;
         Dictionary<string, DeviceInfoDTO> availableDeviceMap;
+        Dictionary<string, byte[]> capturedImages;
 
         public MainWindow()
         {
             availableDeviceMap = new Dictionary<string, DeviceInfoDTO>();
+            capturedImages = new Dictionary<string, byte[]>();
 
-            //getDeviceInfo();
+            
+            getDeviceInfo();
             InitializeComponent();
 
             //InitSampleImage();
@@ -78,7 +83,7 @@ namespace LaxtonSBI
 
         public async void getDeviceInfo()
         {
-            FeedbackMsg.Text = "Scanning for Devices...";
+            //FeedbackMsg.Text = "Scanning for devices...";
 
             availableDeviceMap.Clear();
 
@@ -87,6 +92,7 @@ namespace LaxtonSBI
 
             // Update DeviceInfoMap
             var jwtHelper = new JwtHelper();
+            
             foreach (DeviceInfoDTO info in infoResponse)
             {
                 var digitalId = JsonConvert.DeserializeObject<DigitalIdDTO>(jwtHelper.Decode(info.digitalId, false));
@@ -143,17 +149,108 @@ namespace LaxtonSBI
             StreamRequestDTO streamRequest = new StreamRequestDTO
             {
                 DeviceId = deviceId,
-                DeviceSubId = deviceSubId,
-                Timeout = "2000"
+                DeviceSubId = deviceSubId
             };
 
             Stream responseStream = streamApi.SendCustomRequestAsync(streamRequest);
-            if (responseStream != null)
+            int cnt = 1;
+            while (null != responseStream)
             {
-                Console.WriteLine("originalData: " + responseStream);
-                Console.WriteLine("Stream Request Completed");
+                try
+                {
+                    var imageBytes = retrieveNextImage(responseStream);
 
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = new MemoryStream(imageBytes);
+                    bitmapImage.EndInit();
 
+                    StreamContent.Source = bitmapImage;
+
+                    //ByteArrayInputStream imageStream = new ByteArrayInputStream(imageBytes);
+                    //Image img = new Image(imageStream);
+                    File.WriteAllBytes(@"D:\LaxtonSBI\LaxtonSBI\bin\Debug\bioutils\BiometricInfo\Face\" + "img_" + cnt + ".jpg", imageBytes);
+                    cnt++;
+                }
+                catch (Exception t)
+                {
+                    responseStream = null;
+                }
+            }
+        }
+
+        public void ChangeImage(BitmapImage newImage)
+        {
+            // Set the source of the Image control to the provided BitmapImage
+            FaceContent.Source = newImage;
+        }
+
+        public byte[] retrieveNextImage(Stream urlStream)
+        {
+            try
+            {
+                int currByte = -1;
+
+                bool captureContentLength = false;
+                StringBuilder contentStringBuilder = new StringBuilder(128);
+                StringBuilder headerStringBuilder = new StringBuilder(128);
+                StringWriter contentLengthStringWriter = new StringWriter(contentStringBuilder);
+                StringWriter headerWriter = new StringWriter(headerStringBuilder);
+
+                int contentLength = 0;
+
+                while ((currByte = urlStream.ReadByte()) > -1)
+                {
+                    if (captureContentLength)
+                    {
+                        if (currByte == 10 || currByte == 13)
+                        {
+                            contentLength = int.Parse(contentStringBuilder.ToString().Replace(" ", ""));
+                            break;
+                        }
+                        contentLengthStringWriter.Write((char)currByte);
+
+                    }
+                    else
+                    {
+                        headerWriter.Write((char)currByte);
+                        string tempString = headerStringBuilder.ToString();
+                        int indexOf = tempString.IndexOf("Content-Length:");
+                        if (indexOf > 0)
+                        {
+                            captureContentLength = true;
+                        }
+                    }
+                }
+
+                // 255 indicates the start of the jpeg image
+                while (urlStream.ReadByte() != 255)
+                {
+
+                }
+
+                // && urlStream.read()!=-1
+                // if(urlStream.read()==-1) {
+                // throw new RuntimeException("No stream available");
+                // }
+
+                // rest is the buffer
+                byte[] imageBytes = new byte[contentLength + 1];
+                // since we ate the original 255 , shove it back in
+                imageBytes[0] = (byte)255;
+                int offset = 1;
+                int numRead = 0;
+                while (offset < imageBytes.Length
+                        && (numRead = urlStream.Read(imageBytes, offset, imageBytes.Length - offset)) >= 0)
+                {
+                    offset += numRead;
+                }
+
+                return imageBytes;
+            }
+            catch
+            {
+                throw;
             }
         }
 
@@ -202,7 +299,7 @@ namespace LaxtonSBI
 
         private void FaceCaptureBtn_Click(object sender, RoutedEventArgs e)
         {
-            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+            
 
             ComboBoxItem item = (ComboBoxItem)FaceDropdown.SelectedItem;
 
@@ -245,7 +342,7 @@ namespace LaxtonSBI
 
         private void FingerprintCaptureBtn_Click(object sender, RoutedEventArgs e)
         {
-            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+            
 
             ComboBoxItem item = (ComboBoxItem)FingerprintDropdown.SelectedItem;
 
@@ -279,7 +376,7 @@ namespace LaxtonSBI
 
         private void IrisCaptureBtn_Click(object sender, RoutedEventArgs e)
         {
-            FeedbackMsg.Text = "Feedback messages to the user is displayed here";
+            
 
             ComboBoxItem item = (ComboBoxItem)IrisDropdown.SelectedItem;
 
@@ -497,8 +594,16 @@ namespace LaxtonSBI
                 bitmapImage.StreamSource = new MemoryStream(img);
                 bitmapImage.EndInit();
 
-                if (type == SBIConstants.FACE) ImagesToShow.Add("FACE", bitmapImage);
-                else ImagesToShow.Add(bio.bioSubType, bitmapImage);
+                if (type == SBIConstants.FACE)
+                {
+                    ImagesToShow.Add("FACE", bitmapImage);
+                    capturedImages.Add("FACE", img);
+                }
+                else
+                {
+                    ImagesToShow.Add(bio.bioSubType, bitmapImage);
+                    capturedImages.Add(bio.bioSubType, img);
+                }
                 ScoresToShow.Add(bio.bioSubType, bio.qualityScore);
             }
             
@@ -516,7 +621,7 @@ namespace LaxtonSBI
                         {
                             case SBIConstants.BIO_NAME_LEFT_LITTLE:
                                 LeftLittle_img.Source = entry.Value;
-                                
+                                LeftLittle_score.Text = ScoresToShow[entry.Key];
                                 break;
                             case SBIConstants.BIO_NAME_LEFT_RING:
                                 LeftRing_img.Source = entry.Value;
@@ -586,7 +691,23 @@ namespace LaxtonSBI
 
         private void DeviceScanBtn_Click(object sender, RoutedEventArgs e)
         {
+           
             getDeviceInfo();
+        }
+
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //foreach(KeyValuePair<string, byte[]> entry in capturedImages)
+            //{
+            //    string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
+
+            //    // Combine the Downloads folder path with the file name
+            //    //string filePath = Path.Combine(downloadsFolderPath, img_);
+
+            //    // Write the byte array to the file
+            //    //File.WriteAllBytes(filePath, imageBytes);
+            //}
+
         }
     }
 }
